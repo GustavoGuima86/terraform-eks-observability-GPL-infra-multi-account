@@ -1,0 +1,7 @@
+region                  = "eu-central-1"
+cluster_name            = "gustavo-cluster-1"
+vpc_cidr                = "10.0.0.0/16"
+vpc_name                = "eks-vpc"
+observability_namespace = "monitoring"
+loki_bucket_name        = "gustavo-loki-bucket"
+mimir_bucket_name       = "gustavo-mimir-bucket"
