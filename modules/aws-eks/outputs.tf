@@ -3,6 +3,10 @@ output "cluster_name" {
   description = "Eks cluster name"
 }
 
+output "cluster_sg" {
+  value = module.eks.cluster_primary_security_group_id
+}
+
 output "oidc_id" {
   value       = local.oidc_id
   description = "The OIDC ID extracted from the issuer URL."

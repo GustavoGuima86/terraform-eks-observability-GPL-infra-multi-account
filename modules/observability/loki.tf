@@ -1,11 +1,12 @@
 resource "aws_s3_bucket" "loki_bucket_chunk" {
   bucket        = local.bucket_loki_chunk
-  force_destroy = true
+  force_destroy = var.force_bucket_destroy
+
 }
 
 resource "aws_s3_bucket" "loki_bucket_ruler" {
   bucket        = local.bucket_loki_ruler
-  force_destroy = true
+  force_destroy = var.force_bucket_destroy
 }
 
 resource "aws_iam_policy" "loki_s3_policy" {
@@ -72,7 +73,7 @@ resource "helm_release" "loki" {
   chart      = "loki"
   version    = "6.19.0"
   values     = [local.values_loki]
-  # depends_on = [helm_release.agent_operator]
+  depends_on = [kubectl_manifest.namespace]
 }
 
 resource "helm_release" "promtail" {
@@ -86,4 +87,57 @@ resource "helm_release" "promtail" {
     file("${path.module}/values/values-promtail.yaml")
   ]
   depends_on = [helm_release.loki]
+}
+
+resource "aws_security_group" "loki_sg" {
+  name        = "loki-alb-sg"
+  description = "Security group for the ALB managing the Loki ingress"
+  vpc_id      = var.vpc_id
+
+  tags = var.tags
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "kubernetes_ingress_v1" "loki_ingress" {
+  wait_for_load_balancer = true
+  metadata {
+    name      = "loki"
+    namespace = var.namespace
+    annotations = {
+      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTP\":80}]"
+      "alb.ingress.kubernetes.io/scheme"           = "internal"
+      "alb.ingress.kubernetes.io/target-type"      = "ip"
+      "alb.ingress.kubernetes.io/healthcheck-path" = "/api/health"
+      "alb.ingress.kubernetes.io/security-groups"  = aws_security_group.loki_sg.id
+      "alb.ingress.kubernetes.io/manage-backend-security-group-rules" : "true"
+      "alb.ingress.kubernetes.io/load-balancer-attributes" = "access_logs.s3.enabled=true,access_logs.s3.bucket=${aws_s3_bucket.lb_s3_bucket.bucket},access_logs.s3.prefix=alb-logs-loki"
+    }
+  }
+
+  spec {
+    ingress_class_name = "alb"
+
+    default_backend {
+      service {
+        name = "loki-gateway"
+        port {
+          number = 80
+        }
+      }
+    }
+  }
+  depends_on = [aws_s3_bucket.lb_s3_bucket, helm_release.loki]
 }

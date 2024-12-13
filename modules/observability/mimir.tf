@@ -1,16 +1,16 @@
 resource "aws_s3_bucket" "mimir_bucket_chunk" {
   bucket        = local.bucket_mimir_chunk
-  force_destroy = true
+  force_destroy = var.force_bucket_destroy
 }
 
 resource "aws_s3_bucket" "mimir_bucket_ruler" {
   bucket        = local.bucket_mimir_ruler
-  force_destroy = true
+  force_destroy = var.force_bucket_destroy
 }
 
 resource "aws_s3_bucket" "mimir_bucket_alert" {
   bucket        = local.bucket_mimir_alert
-  force_destroy = true
+  force_destroy = var.force_bucket_destroy
 }
 
 resource "aws_iam_policy" "mimir_s3_policy" {
@@ -74,6 +74,7 @@ resource "aws_iam_role_policy_attachment" "mimir-policy-attach" {
   policy_arn = aws_iam_policy.mimir_s3_policy.arn
 }
 
+
 resource "helm_release" "mimir" {
   name       = local.mimir_name
   namespace  = var.namespace
@@ -81,4 +82,34 @@ resource "helm_release" "mimir" {
   chart      = "mimir-distributed"
   version    = "5.5.1"
   values     = [local.values_mimir]
+}
+
+resource "aws_security_group" "mimir_sg" {
+  name        = "mimir-alb-sg"
+  description = "Security group for the ALB managing the Mimir ingress"
+  vpc_id      = var.vpc_id
+
+  tags = var.tags
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow ALB to forward traffic to backend pods on port 8080
+  ingress {
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "TCP"
+    self      = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }

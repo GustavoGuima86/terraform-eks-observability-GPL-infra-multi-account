@@ -3,6 +3,11 @@ output "vpc" {
   value       = module.vpc
 }
 
+output "vpc_name" {
+  description = "The VPC"
+  value       = module.vpc.name
+}
+
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = module.vpc.vpc_id

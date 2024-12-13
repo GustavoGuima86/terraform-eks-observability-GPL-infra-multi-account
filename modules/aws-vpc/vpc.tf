@@ -38,3 +38,9 @@ module "vpc" {
     "kubernetes.io/role/internal-elb" = 1
   }
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = module.vpc.vpc_id
+  service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+  route_table_ids   = module.vpc.private_route_table_ids
+}

@@ -1,9 +1,9 @@
-## Beta
+## WIP - please don't use it yet, working in progress
 # Observability EKS opensource S3 backend
 
 Using the stack, Grafana, Prometheus, Loki and Mimir
 
-By relying in Opensource tool and S3 storage we are achieving a high level of cost-effectiveness and resilience.
+By relying on in Opensource tool and S3 storage we are achieving a high level of cost-effectiveness and resilience.
 
 Tools applied:
 

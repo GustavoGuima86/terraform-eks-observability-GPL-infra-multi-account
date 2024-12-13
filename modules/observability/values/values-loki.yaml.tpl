@@ -27,8 +27,6 @@ loki:
         ruler: ${bucket_ruler}
       s3:
         region: ${region}
-        #insecure: true
-      # s3forcepathstyle: false
 serviceAccount:
   create: true
   name: ${sa_loki_name}
