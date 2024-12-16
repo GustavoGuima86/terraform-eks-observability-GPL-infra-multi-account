@@ -3,19 +3,19 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
+      source = "hashicorp/aws"
     }
     cloudinit = {
-      source  = "hashicorp/cloudinit"
+      source = "hashicorp/cloudinit"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
+      source = "hashicorp/kubernetes"
     }
     helm = {
-      source  = "hashicorp/helm"
+      source = "hashicorp/helm"
     }
     kubectl = {
-      source  = "alekc/kubectl"
+      source = "alekc/kubectl"
     }
   }
 }

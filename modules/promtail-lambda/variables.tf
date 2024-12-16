@@ -141,6 +141,6 @@ variable "loki_url" {
 }
 
 variable "email_alert" {
-  type = string
+  type        = string
   description = "This is the email box to send alerts when Loki fails and Promtail can not send messages"
 }

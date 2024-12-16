@@ -11,8 +11,6 @@ resource "helm_release" "ebs_csi_driver" {
     value = aws_iam_role.ebs_csi_iam_role.arn
   }
 
-  # We have to set the region manually here
-  # kube-system workloads are running on Fargate which do no have EC2 Metadata Service (which is used in the default region detection for external-secrets)
   set {
     name  = "controller.region"
     value = var.aws_region

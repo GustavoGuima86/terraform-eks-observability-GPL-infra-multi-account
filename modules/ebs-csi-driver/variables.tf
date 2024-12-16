@@ -31,6 +31,5 @@ variable "aws_region" {
 
 locals {
   ebs_csi_iam_role                          = join("-", [var.cluster_name, "ebs-csi"])
-  ebs_csi_kms_key_name                      = join("-", [var.cluster_name, "ebs-csi"])
   eks_open_id_connect_provider_url_replaced = replace(var.eks_open_id_connect_provider_url, "https://", "")
 }

@@ -26,29 +26,27 @@ resource "aws_iam_policy" "loki_s3_policy" {
   name        = "loki-s3-policy"
   description = "Policy for Loki to access specific S3 buckets"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "VisualEditor",
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "s3:DeleteObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${local.bucket_loki_chunk}",
-        "arn:aws:s3:::${local.bucket_loki_chunk}/*",
-        "arn:aws:s3:::${local.bucket_loki_ruler}",
-        "arn:aws:s3:::${local.bucket_loki_ruler}/*"
-      ]
-    }
-  ]
-}
-EOF
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Sid : "VisualEditor",
+        Effect : "Allow",
+        Action : [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:DeleteObject"
+        ],
+        Resource : [
+          "arn:aws:s3:::${local.bucket_loki_chunk}",
+          "arn:aws:s3:::${local.bucket_loki_chunk}/*",
+          "arn:aws:s3:::${local.bucket_loki_ruler}",
+          "arn:aws:s3:::${local.bucket_loki_ruler}/*"
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "loki_s3_role" {

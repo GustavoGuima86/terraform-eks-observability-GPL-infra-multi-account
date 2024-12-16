@@ -1,4 +1,4 @@
-region                  = "eu-central-1"
+region                   = "eu-central-1"
 flow_logs_bucket_name    = "gustavo-flow-logs-bucket"
 cloud_trails_bucket_name = "gustavo-cloud-trail-bucket"
 

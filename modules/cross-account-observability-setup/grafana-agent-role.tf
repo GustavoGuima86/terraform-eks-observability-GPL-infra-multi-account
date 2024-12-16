@@ -2,14 +2,13 @@ resource "aws_iam_policy" "grafana_agent_policy" {
   name        = "grafana-agent-policy"
   description = "Policy for Grafana Agent"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "VisualEditor",
-      "Effect": "Allow",
-      "Action": [
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Sid : "VisualEditor",
+        Effect : "Allow",
+        Action : [
           "tag:GetResources",
           "cloudwatch:GetMetricData",
           "cloudwatch:GetMetricStatistics",
@@ -19,12 +18,12 @@ resource "aws_iam_policy" "grafana_agent_policy" {
           "storagegateway:ListGateways",
           "ec2:DescribeTransitGatewayAttachments",
           "ec2:DescribeSpotFleetRequests"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+        ],
+        Resource : "*"
+      }
+    ]
+
+  })
 }
 
 resource "aws_iam_role" "grafana_agent_role" {

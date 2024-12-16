@@ -30,33 +30,31 @@ resource "aws_iam_policy" "mimir_s3_policy" {
   name        = "mimir-s3-policy"
   description = "Policy for Loki to access specific S3 buckets"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "VisualEditor",
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "s3:DeleteObject",
-        "s3:PutObjectAcl",
-        "s3:GetBucketLocation"
-      ],
-      "Resource": [
-        "arn:aws:s3:::${local.bucket_mimir_chunk}",
-        "arn:aws:s3:::${local.bucket_mimir_chunk}/*",
-        "arn:aws:s3:::${local.bucket_mimir_alert}",
-        "arn:aws:s3:::${local.bucket_mimir_alert}/*",
-        "arn:aws:s3:::${local.bucket_mimir_ruler}",
-        "arn:aws:s3:::${local.bucket_mimir_ruler}/*"
-      ]
-    }
-  ]
-}
-EOF
+  policy = jsonencode({
+    Version : "2012-10-17",
+    Statement : [
+      {
+        Sid : "VisualEditor",
+        Effect : "Allow",
+        Action : [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:DeleteObject",
+          "s3:PutObjectAcl",
+          "s3:GetBucketLocation"
+        ],
+        Resource : [
+          "arn:aws:s3:::${local.bucket_mimir_chunk}",
+          "arn:aws:s3:::${local.bucket_mimir_chunk}/*",
+          "arn:aws:s3:::${local.bucket_mimir_alert}",
+          "arn:aws:s3:::${local.bucket_mimir_alert}/*",
+          "arn:aws:s3:::${local.bucket_mimir_ruler}",
+          "arn:aws:s3:::${local.bucket_mimir_ruler}/*"
+        ]
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "mimir_s3_role" {

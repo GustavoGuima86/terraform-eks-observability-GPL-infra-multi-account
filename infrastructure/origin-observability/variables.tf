@@ -14,7 +14,7 @@ variable "cloud_trails_bucket_name" {
 }
 
 variable "gustavo_account_2" {
-  type = string
+  type        = string
   description = "Account to be collected cross account observability data"
-  default = "277707138630"
+  default     = "277707138630"
 }

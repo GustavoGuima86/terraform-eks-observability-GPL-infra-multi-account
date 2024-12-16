@@ -51,6 +51,12 @@ variable "cloud_trails_bucket_name" {
   description = "Bucket name for cloud trail logs"
 }
 
-variable "gustavo_account_2" {
-  default = "277707138630"
+variable "monitored_accounts" {
+  type        = list(string)
+  description = "Monitored account to be watched"
+}
+
+variable "alert_email" {
+  type        = string
+  description = "Email to send alerts"
 }
