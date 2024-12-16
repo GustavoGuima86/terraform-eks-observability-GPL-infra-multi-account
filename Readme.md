@@ -1,4 +1,4 @@
-# Observability EKS opensource S3 backend
+# Observability Cross-account AWS Infrastructure + EKS opensource S3 backend
 
 Using the stack, Grafana, Prometheus, Loki and Mimir
 
