@@ -9,6 +9,19 @@ resource "aws_s3_bucket" "loki_bucket_ruler" {
   force_destroy = var.force_bucket_destroy
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_loki_chunk_bucket" {
+  bucket = aws_s3_bucket.loki_bucket_chunk.id
+
+  rule {
+    id     = "delete-objects-older-than-7-days"
+    status = "Enabled"
+
+    expiration {
+      days = 30
+    }
+  }
+}
+
 resource "aws_iam_policy" "loki_s3_policy" {
   name        = "loki-s3-policy"
   description = "Policy for Loki to access specific S3 buckets"

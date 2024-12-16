@@ -5,6 +5,19 @@ resource "aws_s3_bucket" "lb_s3_bucket" {
   tags = var.tags
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_lb_bucket" {
+  bucket = aws_s3_bucket.lb_s3_bucket.id
+
+  rule {
+    id     = "delete-objects-older-than-7-days"
+    status = "Enabled"
+
+    expiration {
+      days = 7
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "lb_s3_bucket_policy" {
   bucket = aws_s3_bucket.lb_s3_bucket.id
 
@@ -57,6 +70,19 @@ resource "aws_s3_bucket" "vpc_flow_s3_bucket" {
   force_destroy = var.force_bucket_destroy
 
   tags = var.tags
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_vpc_flow_bucket" {
+  bucket = aws_s3_bucket.vpc_flow_s3_bucket.id
+
+  rule {
+    id     = "delete-objects-older-than-7-days"
+    status = "Enabled"
+
+    expiration {
+      days = 7
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "lb_flow_s3_bucket_policy" {
@@ -118,6 +144,19 @@ resource "aws_s3_bucket" "cloud_trail_s3_bucket" {
   force_destroy = var.force_bucket_destroy
 
   tags = var.tags
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_cloud_trail_bucket" {
+  bucket = aws_s3_bucket.cloud_trail_s3_bucket.id
+
+  rule {
+    id     = "delete-objects-older-than-7-days"
+    status = "Enabled"
+
+    expiration {
+      days = 7
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "cloud_trail_s3_bucket_policy" {

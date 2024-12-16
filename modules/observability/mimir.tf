@@ -13,6 +13,19 @@ resource "aws_s3_bucket" "mimir_bucket_alert" {
   force_destroy = var.force_bucket_destroy
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "lifecycle_mimir_chunk_bucket" {
+  bucket = aws_s3_bucket.mimir_bucket_chunk.id
+
+  rule {
+    id     = "delete-objects-older-than-7-days"
+    status = "Enabled"
+
+    expiration {
+      days = 30
+    }
+  }
+}
+
 resource "aws_iam_policy" "mimir_s3_policy" {
   name        = "mimir-s3-policy"
   description = "Policy for Loki to access specific S3 buckets"
@@ -82,6 +95,7 @@ resource "helm_release" "mimir" {
   chart      = "mimir-distributed"
   version    = "5.5.1"
   values     = [local.values_mimir]
+  depends_on = [helm_release.grafana-agent]
 }
 
 resource "aws_security_group" "mimir_sg" {

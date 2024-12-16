@@ -60,8 +60,6 @@ resource "aws_ssm_parameter" "password_grafana" {
   name  = "Password_Grafana"
   type  = "String"
   value = random_password.password_grafana.result
-
-  tags = var.tags
 }
 
 

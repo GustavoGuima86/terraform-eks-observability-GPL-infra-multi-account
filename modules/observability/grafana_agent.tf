@@ -72,6 +72,7 @@ resource "kubernetes_service_account_v1" "grafana_agent_service_account" {
       "eks.amazonaws.com/role-arn" = "arn:aws:iam::${each.value}:role/grafana-agent-role"
     }
   }
+  depends_on = [kubectl_manifest.namespace]
 }
 
 resource "helm_release" "grafana-agent" {
